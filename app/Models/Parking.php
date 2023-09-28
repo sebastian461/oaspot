@@ -39,4 +39,9 @@ class Parking extends Model
   {
     return $this->hasMany(Document::class);
   }
+
+  public function image(): HasMany
+  {
+    return $this->hasMany(Image::class);
+  }
 }
