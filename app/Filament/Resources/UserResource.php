@@ -43,8 +43,8 @@ class UserResource extends Resource
         TextColumn::make('name'),
         TextColumn::make('email'),
         TextColumn::make('roles.name'),
-        TextColumn::make('email_verified_at'),
-        TextColumn::make('created_at'),
+        TextColumn::make('email_verified_at')->dateTime()->sortable(),
+        TextColumn::make('created_at')->dateTime()->sortable(),
       ])
       ->filters([
         //
