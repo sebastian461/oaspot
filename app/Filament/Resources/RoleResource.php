@@ -9,6 +9,7 @@ use App\Models\Role;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -69,6 +70,7 @@ class RoleResource extends Resource
   {
     return [
       //
+      RelationManagers\RoleHasPermissionsRelationManager::class,
     ];
   }
 

@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -31,7 +32,6 @@ class UserResource extends Resource
         TextInput::make('name')->required(),
         TextInput::make('email')->required()->email(),
         TextInput::make('password')->required()->password()->hiddenOn('edit'),
-        Select::make('roles')->multiple()->relationship('roles', 'name')
       ]);
   }
 
