@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ImageResource\Pages;
 use App\Filament\Resources\ImageResource\RelationManagers;
 use App\Models\Image;
+use App\Models\Parking;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,7 +27,7 @@ class ImageResource extends Resource
     return $form
       ->schema([
         Forms\Components\Select::make('parking_id')
-          ->relationship('parking', 'name')
+          ->options(Parking::where('user_id', auth()->id())->pluck('name', 'id'))
           ->required(),
         FileUpload::make('url')
           ->downloadable()
@@ -61,7 +62,13 @@ class ImageResource extends Resource
         Tables\Actions\BulkActionGroup::make([
           Tables\Actions\DeleteBulkAction::make(),
         ]),
-      ]);
+      ])->modifyQueryUsing(function (Builder $query) {
+        if (auth()->user()->hasRole(['User'])) {
+          $query->whereHas('parking', function ($query) {
+            $query->where('user_id', auth()->id());
+          });
+        }
+      });
   }
 
   public static function getRelations(): array

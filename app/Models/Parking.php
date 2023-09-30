@@ -35,7 +35,7 @@ class Parking extends Model
     return $this->belongsTo(City::class);
   }
 
-  public function document(): HasMany
+  public function documents(): HasMany
   {
     return $this->hasMany(Document::class);
   }

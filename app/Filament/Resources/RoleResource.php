@@ -29,9 +29,11 @@ class RoleResource extends Resource
         Forms\Components\TextInput::make('name')
           ->required()
           ->maxLength(255),
-        Forms\Components\TextInput::make('guard_name')
-          ->required()
-          ->maxLength(255),
+        Select::make('guard_name')
+          ->options([
+            'web' => 'web',
+            'api' => 'api',
+          ])->required(),
         //Select::make('permission')->options(Permission::all()->pluck('name', 'id'))->searchable()->multiple()
       ]);
   }
