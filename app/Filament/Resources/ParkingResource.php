@@ -17,6 +17,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\User;
+use Filament\Forms\Components\Hidden;
 
 class ParkingResource extends Resource
 {
@@ -30,7 +32,7 @@ class ParkingResource extends Resource
       ->schema([
         //
         TextInput::make('name')->required(),
-        Select::make('user_id')->relationship('user', 'name')->required(),
+        Hidden::make('user_id')->default(auth()->id()),
         Select::make('city_id')->relationship('city', 'name')->required(),
         TextInput::make('address')->required(),
         TextInput::make('places')->numeric()->required(),
@@ -56,17 +58,26 @@ class ParkingResource extends Resource
       ->actions([
         Tables\Actions\EditAction::make(),
       ])
-      ->bulkActions([
-        Tables\Actions\BulkActionGroup::make([
-          Tables\Actions\DeleteBulkAction::make(),
-        ]),
-      ]);
+      ->bulkActions(
+        [
+          Tables\Actions\BulkActionGroup::make([
+            Tables\Actions\DeleteBulkAction::make(),
+          ]),
+        ]
+      )
+      ->modifyQueryUsing(function (Builder $query) {
+        if (auth()->user()->hasRole(['User'])) {
+          $query->where('user_id', auth()->id());
+        }
+      });
   }
 
   public static function getRelations(): array
   {
     return [
       //
+      RelationManagers\DocumentsRelationManager::class,
+      RelationManagers\ImageRelationManager::class,
     ];
   }
 

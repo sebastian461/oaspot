@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DocumentResource\Pages;
 use App\Filament\Resources\DocumentResource\RelationManagers;
 use App\Models\Document;
+use App\Models\Parking;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -25,7 +26,7 @@ class DocumentResource extends Resource
     return $form
       ->schema([
         Forms\Components\Select::make('parking_id')
-          ->relationship('parking', 'name')
+          ->options(Parking::where('user_id', auth()->id())->pluck('name', 'id'))
           ->required(),
         Forms\Components\TextInput::make('name')
           ->required()
@@ -64,7 +65,14 @@ class DocumentResource extends Resource
         Tables\Actions\BulkActionGroup::make([
           Tables\Actions\DeleteBulkAction::make(),
         ]),
-      ]);
+      ])
+      ->modifyQueryUsing(function (Builder $query) {
+        if (auth()->user()->hasRole(['User'])) {
+          $query->whereHas('parking', function ($query) {
+            $query->where('user_id', auth()->id());
+          });
+        }
+      });
   }
 
   public static function getRelations(): array

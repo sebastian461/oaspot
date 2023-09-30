@@ -2,23 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ImageResource\Pages;
-use App\Filament\Resources\ImageResource\RelationManagers;
-use App\Models\Image;
-use App\Models\Parking;
+use App\Filament\Resources\RoleResource\Pages;
+use App\Filament\Resources\RoleResource\RelationManagers;
+use App\Models\Permission;
+use App\Models\Role;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\FileUpload;
 
-
-class ImageResource extends Resource
+class RoleResource extends Resource
 {
-  protected static ?string $model = Image::class;
+  protected static ?string $model = Role::class;
 
   protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -26,13 +26,15 @@ class ImageResource extends Resource
   {
     return $form
       ->schema([
-        Forms\Components\Select::make('parking_id')
-          ->options(Parking::where('user_id', auth()->id())->pluck('name', 'id'))
-          ->required(),
-        FileUpload::make('url')
-          ->downloadable()
-          ->image()
+        Forms\Components\TextInput::make('name')
           ->required()
+          ->maxLength(255),
+        Select::make('guard_name')
+          ->options([
+            'web' => 'web',
+            'api' => 'api',
+          ])->required(),
+        //Select::make('permission')->options(Permission::all()->pluck('name', 'id'))->searchable()->multiple()
       ]);
   }
 
@@ -40,13 +42,14 @@ class ImageResource extends Resource
   {
     return $table
       ->columns([
-        Tables\Columns\TextColumn::make('parking.name')
-          ->numeric()
-          ->sortable(),
-        Tables\Columns\TextColumn::make('url'),
+        Tables\Columns\TextColumn::make('name')
+          ->searchable(),
+        Tables\Columns\TextColumn::make('guard_name')
+          ->searchable(),
         Tables\Columns\TextColumn::make('created_at')
           ->dateTime()
-          ->sortable(),
+          ->sortable()
+          ->toggleable(isToggledHiddenByDefault: true),
         Tables\Columns\TextColumn::make('updated_at')
           ->dateTime()
           ->sortable()
@@ -62,28 +65,23 @@ class ImageResource extends Resource
         Tables\Actions\BulkActionGroup::make([
           Tables\Actions\DeleteBulkAction::make(),
         ]),
-      ])->modifyQueryUsing(function (Builder $query) {
-        if (auth()->user()->hasRole(['User'])) {
-          $query->whereHas('parking', function ($query) {
-            $query->where('user_id', auth()->id());
-          });
-        }
-      });
+      ]);
   }
 
   public static function getRelations(): array
   {
     return [
       //
+      RelationManagers\RoleHasPermissionsRelationManager::class,
     ];
   }
 
   public static function getPages(): array
   {
     return [
-      'index' => Pages\ListImages::route('/'),
-      'create' => Pages\CreateImage::route('/create'),
-      'edit' => Pages\EditImage::route('/{record}/edit'),
+      'index' => Pages\ListRoles::route('/'),
+      'create' => Pages\CreateRole::route('/create'),
+      'edit' => Pages\EditRole::route('/{record}/edit'),
     ];
   }
 }
