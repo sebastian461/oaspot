@@ -19,7 +19,10 @@ class ImageRelationManager extends RelationManager
   {
     return $form
       ->schema([
-        FileUpload::make('url')->required()->image(),
+        FileUpload::make('url')
+          ->required()
+          ->image()
+          ->label('URL'),
       ]);
   }
 
@@ -28,7 +31,8 @@ class ImageRelationManager extends RelationManager
     return $table
       ->recordTitleAttribute('url')
       ->columns([
-        Tables\Columns\TextColumn::make('url'),
+        Tables\Columns\TextColumn::make('url')
+          ->label('URL'),
       ])
       ->filters([
         //

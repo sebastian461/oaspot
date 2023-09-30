@@ -22,17 +22,26 @@ class UserResource extends Resource
 {
   protected static ?string $model = User::class;
 
-  protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+  protected static ?string $navigationIcon = 'heroicon-o-users';
+
+  protected static ?string $navigationLabel = 'Usuario';
+
+  protected static ?string $modelLabel = 'Usuarios';
+
+  protected static ?string $navigationGroup = 'Gestión de usuarios';
+
+  protected static ?int $navigationSort = 1;
+
 
   public static function form(Form $form): Form
   {
     return $form
       ->schema([
         //
-        TextInput::make('name')->required(),
-        TextInput::make('email')->required()->email(),
-        TextInput::make('password')->required()->password()->hiddenOn('edit'),
-        Select::make('roles')->multiple()->relationship('roles', 'name')
+        TextInput::make('name')->required()->label('Nombre'),
+        TextInput::make('email')->required()->email()->label('Correo'),
+        TextInput::make('password')->required()->password()->hiddenOn('edit')->label('Contraseña'),
+        Select::make('roles')->multiple()->relationship('roles', 'name')->label('Roles')
       ]);
   }
 
@@ -41,10 +50,10 @@ class UserResource extends Resource
     return $table
       ->columns([
         //
-        TextColumn::make('name'),
-        TextColumn::make('email'),
-        TextColumn::make('roles.name'),
-        TextColumn::make('email_verified_at')->dateTime()->sortable(),
+        TextColumn::make('name')->label('Nombre'),
+        TextColumn::make('email')->label('Correo'),
+        TextColumn::make('roles.name')->label('Roles'),
+        TextColumn::make('email_verified_at')->dateTime()->sortable()->label('Verificación'),
         TextColumn::make('created_at')->dateTime()->sortable(),
       ])
       ->filters([

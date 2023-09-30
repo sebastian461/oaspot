@@ -24,20 +24,28 @@ class ParkingResource extends Resource
 {
   protected static ?string $model = Parking::class;
 
-  protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+  protected static ?string $navigationIcon = 'heroicon-o-truck';
+
+  protected static ?string $navigationLabel = 'Parqueadero';
+
+  protected static ?string $modelLabel = 'Parqueaderos';
+
+  protected static ?string $navigationGroup = 'Gestión de parqueaderos';
+
+  protected static ?int $navigationSort = 1;
 
   public static function form(Form $form): Form
   {
     return $form
       ->schema([
         //
-        TextInput::make('name')->required(),
+        TextInput::make('name')->required()->label('Nombre'),
         Hidden::make('user_id')->default(auth()->id()),
-        Select::make('city_id')->relationship('city', 'name')->required(),
-        TextInput::make('address')->required(),
-        TextInput::make('places')->numeric()->required(),
-        TextInput::make('price')->numeric()->required(),
-        Textarea::make('description')
+        Select::make('city_id')->relationship('city', 'name')->required()->label('Ciudad'),
+        TextInput::make('address')->required()->label('Dirección'),
+        TextInput::make('places')->numeric()->required()->label('Plazas'),
+        TextInput::make('price')->numeric()->required()->label('Precio'),
+        Textarea::make('description')->label('Descripción')
       ]);
   }
 
@@ -46,11 +54,11 @@ class ParkingResource extends Resource
     return $table
       ->columns([
         //
-        TextColumn::make('name'),
-        TextColumn::make('city.name'),
-        TextColumn::make('address'),
-        TextColumn::make('places'),
-        TextColumn::make('price'),
+        TextColumn::make('name')->label('Nombre'),
+        TextColumn::make('city.name')->label('Ciudad'),
+        TextColumn::make('address')->label('Dirección'),
+        TextColumn::make('places')->label('Plazas'),
+        TextColumn::make('price')->label('Precio'),
       ])
       ->filters([
         //

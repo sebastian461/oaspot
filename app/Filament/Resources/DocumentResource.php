@@ -19,7 +19,15 @@ class DocumentResource extends Resource
 {
   protected static ?string $model = Document::class;
 
-  protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+  protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
+  protected static ?string $navigationLabel = 'Documentos';
+
+  protected static ?string $modelLabel = 'Documentos';
+
+  protected static ?string $navigationGroup = 'Gestión de parqueaderos';
+
+  protected static ?int $navigationSort = 3;
 
   public static function form(Form $form): Form
   {
@@ -27,14 +35,17 @@ class DocumentResource extends Resource
       ->schema([
         Forms\Components\Select::make('parking_id')
           ->options(Parking::where('user_id', auth()->id())->pluck('name', 'id'))
-          ->required(),
+          ->required()
+          ->label('Parqueadero'),
         Forms\Components\TextInput::make('name')
           ->required()
-          ->maxLength(255),
+          ->maxLength(255)
+          ->label('Nombre'),
         FileUpload::make('attachment')
           ->downloadable()
           ->acceptedFileTypes(['application/pdf'])
           ->required()
+          ->label('URL'),
       ]);
   }
 
@@ -44,9 +55,11 @@ class DocumentResource extends Resource
       ->columns([
         Tables\Columns\TextColumn::make('parking.name')
           ->numeric()
-          ->sortable(),
+          ->sortable()
+          ->label('Parqueadero'),
         Tables\Columns\TextColumn::make('name')
-          ->searchable(),
+          ->searchable()
+          ->label('Nombre'),
         Tables\Columns\TextColumn::make('created_at')
           ->dateTime()
           ->sortable(),

@@ -20,7 +20,15 @@ class RoleResource extends Resource
 {
   protected static ?string $model = Role::class;
 
-  protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+  protected static ?string $navigationIcon = 'heroicon-o-link';
+
+  protected static ?string $navigationLabel = 'Rol';
+
+  protected static ?string $modelLabel = 'Roles';
+
+  protected static ?string $navigationGroup = 'Gestión de usuarios';
+
+  protected static ?int $navigationSort = 2;
 
   public static function form(Form $form): Form
   {
@@ -28,7 +36,8 @@ class RoleResource extends Resource
       ->schema([
         Forms\Components\TextInput::make('name')
           ->required()
-          ->maxLength(255),
+          ->maxLength(255)
+          ->label('Rol'),
         Select::make('guard_name')
           ->options([
             'web' => 'web',
@@ -43,7 +52,8 @@ class RoleResource extends Resource
     return $table
       ->columns([
         Tables\Columns\TextColumn::make('name')
-          ->searchable(),
+          ->searchable()
+          ->label('Rol'),
         Tables\Columns\TextColumn::make('guard_name')
           ->searchable(),
         Tables\Columns\TextColumn::make('created_at')

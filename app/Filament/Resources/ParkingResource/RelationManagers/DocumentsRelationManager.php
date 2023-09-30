@@ -21,8 +21,13 @@ class DocumentsRelationManager extends RelationManager
   {
     return $form
       ->schema([
-        TextInput::make('name')->required(),
-        FileUpload::make('attachment')->required()->acceptedFileTypes(['application/pdf']),
+        TextInput::make('name')
+          ->required()
+          ->label('Nombre'),
+        FileUpload::make('attachment')
+          ->required()
+          ->acceptedFileTypes(['application/pdf'])
+          ->label('URL'),
       ]);
   }
 
@@ -31,8 +36,10 @@ class DocumentsRelationManager extends RelationManager
     return $table
       ->recordTitleAttribute('attachment')
       ->columns([
-        TextColumn::make('name'),
-        Tables\Columns\TextColumn::make('attachment'),
+        TextColumn::make('name')
+          ->label('Nombre'),
+        Tables\Columns\TextColumn::make('attachment')
+          ->label('URL'),
       ])
       ->filters([
         //

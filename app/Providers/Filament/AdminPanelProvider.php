@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
 			->id('dashboard')
 			->path('dashboard')
 			->login()
+			->brandName('OASPOT')
 			->colors([
 				'primary' => Color::Amber,
 			])

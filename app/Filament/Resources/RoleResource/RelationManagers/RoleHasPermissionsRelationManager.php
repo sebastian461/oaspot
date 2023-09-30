@@ -20,7 +20,11 @@ class RoleHasPermissionsRelationManager extends RelationManager
   {
     return $form
       ->schema([
-        Select::make('permission_id')->relationship('permission', 'name')->searchable()->required(),
+        Select::make('permission_id')
+          ->relationship('permission', 'name')
+          ->searchable()
+          ->required()
+          ->label('Permiso'),
       ]);
   }
 
@@ -29,7 +33,8 @@ class RoleHasPermissionsRelationManager extends RelationManager
     return $table
       ->recordTitleAttribute('permission_id')
       ->columns([
-        Tables\Columns\TextColumn::make('permission.name'),
+        Tables\Columns\TextColumn::make('permission.name')
+          ->label('Permiso'),
       ])
       ->filters([
         //

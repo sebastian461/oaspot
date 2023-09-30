@@ -20,7 +20,15 @@ class ImageResource extends Resource
 {
   protected static ?string $model = Image::class;
 
-  protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+  protected static ?string $navigationIcon = 'heroicon-o-photo';
+
+  protected static ?string $navigationLabel = 'Imagenes';
+
+  protected static ?string $modelLabel = 'Imagenes';
+
+  protected static ?string $navigationGroup = 'Gestión de parqueaderos';
+
+  protected static ?int $navigationSort = 2;
 
   public static function form(Form $form): Form
   {
@@ -28,11 +36,13 @@ class ImageResource extends Resource
       ->schema([
         Forms\Components\Select::make('parking_id')
           ->options(Parking::where('user_id', auth()->id())->pluck('name', 'id'))
-          ->required(),
+          ->required()
+          ->label('Parqueadero'),
         FileUpload::make('url')
           ->downloadable()
           ->image()
           ->required()
+          ->label('URL'),
       ]);
   }
 
@@ -42,7 +52,8 @@ class ImageResource extends Resource
       ->columns([
         Tables\Columns\TextColumn::make('parking.name')
           ->numeric()
-          ->sortable(),
+          ->sortable()
+          ->label('Parqueadero'),
         Tables\Columns\TextColumn::make('url'),
         Tables\Columns\TextColumn::make('created_at')
           ->dateTime()
